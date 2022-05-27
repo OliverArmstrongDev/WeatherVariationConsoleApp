@@ -14,6 +14,13 @@ namespace WeatherVariance
             public int minIndx = -1;
             public int maxIndx = -1;
             public string CurrentMonth = "For the month of ";
+            public string MinTempHeading = "----------- Minimum Temp Values ------------";
+            public string MinMaxTempTitle = "-------- Lowest and Highest Temperatures --------";
+            public string MinTempMaxString = "MnT : Highest Temperature For This Month => ";
+            public string MinTempMinString = "MnT : Lowest Temperature For This Month =>  ";
+            public string MaxTempHeading = "----------- Maximum Temp Values ------------";
+            public string MaxTempMaxString = "MxT : Highest Temperature For This Month => ";
+            public string MaxTempMinString = "MxT : Lowest Temperature For This Month =>  ";
             public string MinVariationHeading = "----------- Minimum Temperarature Variation ------------";
             public string MinVariationString = "The day which had the least difference between high and low temperatures was: ";
             public string MinVariationMinTempString = "Min temp that day was: ";
@@ -52,8 +59,9 @@ namespace WeatherVariance
             string divider = "-----------------------------------------------------------------------------";
             string optionHeader = "What would you like to do?:";
             string option1 = "1) Get Minimum Temperature variation ";
+            string option2 = "2) Get Minimum & Maximum Temperatures";
             string optionSelectMessage = "Type the number of the option you want:";
-            string exitApp = "2) Exit                               ";
+            string exitApp = "3) Exit                               ";
 
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Blue;
@@ -68,6 +76,7 @@ namespace WeatherVariance
             Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (optionHeader.Length / 2)) + "}", optionHeader));
             Console.WriteLine();
             Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (option1.Length / 2)) + "}", option1));
+            Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (option2.Length / 2)) + "}", option2));
             Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (exitApp.Length / 2)) + "}", exitApp));
             Console.WriteLine();
             Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (optionSelectMessage.Length / 2)) + "}", optionSelectMessage));
@@ -77,9 +86,12 @@ namespace WeatherVariance
                 switch (Console.ReadLine())
                 {
                     case "1":
-                        DoWork();
+                        DoWork(true, false);
                         break;
                     case "2":
+                        DoWork(false, true);
+                        break;
+                    case "3":
                         Environment.Exit(0);
                         return;
                     default:
@@ -89,14 +101,14 @@ namespace WeatherVariance
             }
         }
 
-        public void DoWork()
+        public void DoWork(bool GetVariation, bool MinMax)
         {
             WeatherVars weatherVars = new WeatherVars();
             Months months = new Months();
             try
             {
-                string[] contents = File.ReadAllLines(weatherVars.path);
 
+                string[] contents = File.ReadAllLines(weatherVars.path);
                 for (int i = 0; i < contents.Length; i++)
                 {
                     string[] columns = contents[i].Split(" ", StringSplitOptions.RemoveEmptyEntries);
@@ -147,41 +159,87 @@ namespace WeatherVariance
                     weatherVars.MinVariationDayNumber = (Tmp_TemperaturesList.IndexOf(minVal) + 1);
                 }
 
+                if (MinMax)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine();
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinMaxTempTitle.Length / 2)) + "}", weatherVars.MinMaxTempTitle));
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.CurrentMonth.Length / 2)) + "}", weatherVars.CurrentMonth));
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.divider.Length / 2)) + "}", weatherVars.divider));
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinTempHeading.Length / 2)) + "}", weatherVars.MinTempHeading));
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine();
+                    Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinTempMaxString.Length / 2)) + "}", weatherVars.MinTempMaxString));
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(weatherVars.minTempsList.Max(mx => mx));
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinTempMinString.Length / 2)) + "}", weatherVars.MinTempMinString));
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(weatherVars.minTempsList.Min(mn => mn));
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MaxTempHeading.Length / 2)) + "}", weatherVars.MaxTempHeading));
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine();
+                    Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MaxTempMaxString.Length / 2)) + "}", weatherVars.MaxTempMaxString));
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write(weatherVars.maxTempsList.Max(mn => mn));
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MaxTempMinString.Length / 2)) + "}", weatherVars.MaxTempMinString));
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write(weatherVars.maxTempsList.Min(mn => mn));
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.divider.Length / 2)) + "}", weatherVars.divider));
+                    Console.WriteLine();
 
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinVariationHeading.Length / 2)) + "}", weatherVars.MinVariationHeading));
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.CurrentMonth.Length / 2)) + "}", weatherVars.CurrentMonth));
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.divider.Length / 2)) + "}", weatherVars.divider));
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinVariationString.Length / 2)) + "}", weatherVars.MinVariationString));
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("Day " + (weatherVars.MinVariationDayNumber));
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinVariationMaxTempString.Length / 2)) + "}", weatherVars.MinVariationMaxTempString));
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.Write((weatherVars.maxTempsList[Tmp_TemperaturesList.IndexOf(minVal)]));
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinVariationMinTempString.Length / 2)) + "}", weatherVars.MinVariationMinTempString));
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write((weatherVars.minTempsList[Tmp_TemperaturesList.IndexOf(minVal)]));
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.ResetColor();
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.divider.Length / 2)) + "}", weatherVars.divider));
+                }
+                if (GetVariation)
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinVariationHeading.Length / 2)) + "}", weatherVars.MinVariationHeading));
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.CurrentMonth.Length / 2)) + "}", weatherVars.CurrentMonth));
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.divider.Length / 2)) + "}", weatherVars.divider));
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinVariationString.Length / 2)) + "}", weatherVars.MinVariationString));
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.Write("Day " + (weatherVars.MinVariationDayNumber));
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinVariationMaxTempString.Length / 2)) + "}", weatherVars.MinVariationMaxTempString));
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.Write((weatherVars.maxTempsList[Tmp_TemperaturesList.IndexOf(minVal)]));
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.MinVariationMinTempString.Length / 2)) + "}", weatherVars.MinVariationMinTempString));
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write((weatherVars.minTempsList[Tmp_TemperaturesList.IndexOf(minVal)]));
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Console.ResetColor();
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (weatherVars.divider.Length / 2)) + "}", weatherVars.divider));
 
-
+                }
 
             }
             catch (FileNotFoundException)
