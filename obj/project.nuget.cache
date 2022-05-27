@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2UbA8fl6U1ma6Xt6pP+jz6lFOiqCFUHhJ7uLoPXiC4hrubNKoTOK6GC9B8G40uG1nTOILWUaxGSqG80fjD2lUg==",
+  "dgSpecHash": "2sGFp/Jrc8y0/7dsKrDzg6IHq9wJpyZaPyRKfteUo+G/2vvtE2tVAMYiMHFRkrA3awfCbJKv9pC/q8eN/D73zQ==",
   "success": true,
-  "projectFilePath": "/Users/Ollie/Documents/C#/2022/WeatherVariationConsoleApp/WeatherVariation.csproj",
+  "projectFilePath": "/Users/Ollie/Documents/WebDev/C#/2022/WeatherVariationConsoleApp/WeatherVariation.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
